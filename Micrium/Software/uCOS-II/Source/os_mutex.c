@@ -534,38 +534,38 @@ void  OSMutexPend (OS_EVENT  *pevent,
     }
 
 
-    if (pcp == R2_PRIO) {
+    if (pcp == R2_prio) {
         if (OSTCBCur->OSTCBPrio < pcp) {
-            printf("%2d\tTask %d get R2\t\t\t\t\t%d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, OSTCBCur->OSTCBPrio);
+            printf("%2d\tTask %d get R2\t\t\t\t\t\t %d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, OSTCBCur->OSTCBPrio);
             if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
             {
-                fprintf(Output_fp, "%2d\tTask %d get R2\t\t\t\t\t%d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, OSTCBCur->OSTCBPrio);
+                fprintf(Output_fp, "%2d\tTask %d get R2\t\t\t\t\t\t %d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, OSTCBCur->OSTCBPrio);
                 fclose(Output_fp);
             }
         }
         else {
-            printf("%2d\tTask %d get R2\t\t\t\t\t%d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, pcp);
+            printf("%2d\tTask %d get R2\t\t\t\t\t\t %d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, pcp);
             if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
             {
-                fprintf(Output_fp, "%2d\tTask %d get R2\t\t\t\t\t%d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, pcp);
+                fprintf(Output_fp, "%2d\tTask %d get R2\t\t\t\t\t\t %d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, pcp);
                 fclose(Output_fp);
             }
         }
     }
-    if (pcp == R1_PRIO) {
+    if (pcp == R1_prio) {
         if (OSTCBCur->OSTCBPrio < pcp) {
-            printf("%2d\tTask %d get R1\t\t\t\t\t%d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, OSTCBCur->OSTCBPrio);
+            printf("%2d\tTask %d get R1\t\t\t\t\t\t %d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, OSTCBCur->OSTCBPrio);
             if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
             {
-                fprintf(Output_fp, "%2d\tTask %d get R1\t\t\t\t\t%d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, OSTCBCur->OSTCBPrio);
+                fprintf(Output_fp, "%2d\tTask %d get R1\t\t\t\t\t\t %d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, OSTCBCur->OSTCBPrio);
                 fclose(Output_fp);
             }
         }
         else {
-            printf("%2d\tTask %d get R1\t\t\t\t\t%d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, pcp);
+            printf("%2d\tTask %d get R1\t\t\t\t\t\t %d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, pcp);
             if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
             {
-                fprintf(Output_fp, "%2d\tTask %d get R1\t\t\t\t\t%d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, pcp);
+                fprintf(Output_fp, "%2d\tTask %d get R1\t\t\t\t\t\t %d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, pcp);
                 fclose(Output_fp);
             }
         }
@@ -722,38 +722,38 @@ INT8U  OSMutexPost (OS_EVENT *pevent)
         OSTCBPrioTbl[pcp] = OS_TCB_RESERVED;          /* Reserve table entry                           */
     }
 
-    if (pcp == R2_PRIO) {
+    if (pcp == R2_prio) {
         if (pcp > OSTCBCur->OSTCBPrio) {
-            printf("%2d\tTask %d release R2\t\t\t\t%d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, OSTCBCur->OSTCBPrio);
+            printf("%2d\tTask %d release R2\t\t\t\t\t %d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, OSTCBCur->OSTCBPrio);
             if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
             {
-                fprintf(Output_fp, "%2d\tTask %d release R2\t\t\t\t%d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, OSTCBCur->OSTCBPrio);
+                fprintf(Output_fp, "%2d\tTask %d release R2\t\t\t\t\t %d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, OSTCBCur->OSTCBPrio);
                 fclose(Output_fp);
             }
         }
         else {
-            printf("%2d\tTask %d release R2\t\t\t\t%d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, pcp, OSTCBCur->OSTCBPrio);
+            printf("%2d\tTask %d release R2\t\t\t\t\t %d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, pcp, OSTCBCur->OSTCBPrio);
             if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
             {
-                fprintf(Output_fp, "%2d\tTask %d release R2\t\t\t\t%d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, pcp, OSTCBCur->OSTCBPrio);
+                fprintf(Output_fp, "%2d\tTask %d release R2\t\t\t\t\t %d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, pcp, OSTCBCur->OSTCBPrio);
                 fclose(Output_fp);
             }
         }
     }
-    if (pcp == R1_PRIO) {
+    if (pcp == R1_prio) {
         if (pcp > OSTCBCur->OSTCBPrio) {
-            printf("%2d\tTask %d release R1\t\t\t\t%d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, OSTCBCur->OSTCBPrio);
+            printf("%2d\tTask %d release R1\t\t\t\t\t %d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, OSTCBCur->OSTCBPrio);
             if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
             {
-                fprintf(Output_fp, "%2d\tTask %d release R1\t\t\t\t%d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, OSTCBCur->OSTCBPrio);
+                fprintf(Output_fp, "%2d\tTask %d release R1\t\t\t\t\t %d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, OSTCBCur->OSTCBPrio);
                 fclose(Output_fp);
             }
         }
         else {
-            printf("%2d\tTask %d release R1\t\t\t\t%d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, pcp, OSTCBCur->OSTCBPrio);
+            printf("%2d\tTask %d release R1\t\t\t\t\t %d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, pcp, OSTCBCur->OSTCBPrio);
             if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
             {
-                fprintf(Output_fp, "%2d\tTask %d release R1\t\t\t\t%d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, pcp, OSTCBCur->OSTCBPrio);
+                fprintf(Output_fp, "%2d\tTask %d release R1\t\t\t\t\t %d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, pcp, OSTCBCur->OSTCBPrio);
                 fclose(Output_fp);
             }
         }

@@ -74,14 +74,19 @@ FILE* fp;
 #define MAX 20  //Task maxumum number
 #define INFO 8  //information of task
 /*Input File*/
+//#define R1_PRIO 1
+//#define R2_PRIO 3
 
+
+//#define TASK1_PRIORITY 4
+//#define TASK2_PRIORITY 2
 //set2
-
+/*
 #define R1_PRIO 1
 #define R2_PRIO 3
 #define TASK1_PRIORITY 4
 #define TASK2_PRIORITY 8
-
+*/
 //set1
 /*
 #define R1_PRIO 11
@@ -116,7 +121,10 @@ typedef struct task_para_set {
 
 int TASK_NUMBER;    //Number of the input tasks
 /*Task structure*/
-
+int R1_exist;
+int R2_exist;
+int R1_prio;
+int R2_prio;
 /*Dynamic Create the Stack size*/
 OS_STK** Task_STK;
 

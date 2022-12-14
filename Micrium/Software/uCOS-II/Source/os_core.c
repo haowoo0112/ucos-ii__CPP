@@ -717,17 +717,17 @@ void  OSIntExit (void)
                     //printf("%d\n", OSTCBCur->OSTCBDly);
                     if (OSTCBCur->OSTCBDly == 0) {
                         if (OSTCBCur->OSTCBPrio != OS_TASK_IDLE_PRIO) {
-                            /*printf("%2d\tPreemption\t task(%2d)(%2d)\t task(%2d)(%2d)\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBExtPtr->TaskNumber, OSTCBHighRdy->OSTCBId, OSTCBHighRdy->OSTCBExtPtr->TaskNumber);
+                            printf("%2d	 Preemption\t task(%2d)(%2d)\t task(%2d)(%2d)\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBExtPtr->TaskNumber, OSTCBHighRdy->OSTCBId, OSTCBHighRdy->OSTCBExtPtr->TaskNumber);
                             if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
                             {
                                 fprintf(Output_fp, "%2d\tPreemption\t task(%2d)(%2d)\t task(%2d)(%2d)\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBExtPtr->TaskNumber, OSTCBHighRdy->OSTCBId, OSTCBHighRdy->OSTCBExtPtr->TaskNumber);
                                 fclose(Output_fp);
-                            }*/
+                            }
                             if (OSTCBHighRdy->OSTCBExtPtr->count == 0)
                                 OSTCBHighRdy->OSTCBExtPtr->start_time = OSTimeGet();
                         }
                         if (OSTCBCur->OSTCBPrio == OS_TASK_IDLE_PRIO) {
-                            printf("%2d\tPreemption\t task(%2d)\t task(%2d)(%2d)\n", OSTimeGet(), OSTCBCur->OSTCBPrio, OSTCBHighRdy->OSTCBId, OSTCBHighRdy->OSTCBExtPtr->TaskNumber);
+                            printf("%2d	 Preemption\t task(%2d)\t task(%2d)(%2d)\n", OSTimeGet(), OSTCBCur->OSTCBPrio, OSTCBHighRdy->OSTCBId, OSTCBHighRdy->OSTCBExtPtr->TaskNumber);
                             if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
                             {
                                 fprintf(Output_fp, "%2d\tPreemption\t task(%2d)\t task(%2d)(%2d)\n", OSTimeGet(), OSTCBCur->OSTCBPrio, OSTCBHighRdy->OSTCBId, OSTCBHighRdy->OSTCBExtPtr->TaskNumber);
@@ -737,14 +737,14 @@ void  OSIntExit (void)
                     }
                     else {
                         if (OSTCBHighRdy->OSTCBPrio != OS_TASK_IDLE_PRIO) {
-                            printf("%2d\tCompletion\t task(%2d)(%2d)\t task(%2d)(%2d)\n",
+                            printf("%2d	 Completion\t task(%2d)(%2d)\t task(%2d)(%2d)\n",
                                 OSTimeGet(),
                                 OSTCBCur->OSTCBId, OSTCBCur->OSTCBExtPtr->TaskNumber,
                                 OSTCBHighRdy->OSTCBId, OSTCBHighRdy->OSTCBExtPtr->TaskNumber
                             );
                             if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
                             {
-                                fprintf(Output_fp, "%2d\tCompletion\t task(%2d)(%2d)\t task(%2d)(%2d)\n",
+                                fprintf(Output_fp, "%2d	 Completion\t task(%2d)(%2d)\t task(%2d)(%2d)\n",
                                     OSTimeGet(),
                                     OSTCBCur->OSTCBId, OSTCBCur->OSTCBExtPtr->TaskNumber,
                                     OSTCBHighRdy->OSTCBId, OSTCBHighRdy->OSTCBExtPtr->TaskNumber
@@ -755,14 +755,14 @@ void  OSIntExit (void)
                                 OSTCBHighRdy->OSTCBExtPtr->start_time = OSTimeGet();
                         }
                         else {
-                            printf("%2d\tCompletion\t task(%2d)(%2d)\t task(%2d)\n",
+                            printf("%2d	 Completion\t task(%2d)(%2d)\t task(%2d)\n",
                                 OSTimeGet(),
                                 OSTCBCur->OSTCBId, OSTCBCur->OSTCBExtPtr->TaskNumber,
                                 OSTCBHighRdy->OSTCBPrio
                             );
                             if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
                             {
-                                fprintf(Output_fp, "%2d\tCompletion\t task(%2d)(%2d)\t task(%2d)\n",
+                                fprintf(Output_fp, "%2d	 Completion\t task(%2d)(%2d)\t task(%2d)\n",
                                     OSTimeGet(),
                                     OSTCBCur->OSTCBId, OSTCBCur->OSTCBExtPtr->TaskNumber,
                                     OSTCBHighRdy->OSTCBPrio
@@ -1856,20 +1856,20 @@ void  OS_Sched (void)
                 
                 if (OSTCBHighRdy->OSTCBId != OSTCBCur->OSTCBId) {
                     if (OSTCBHighRdy->OSTCBPrio != OS_TASK_IDLE_PRIO) {
-                        printf("%2d\tPreemption\t task(%2d)(%2d)\t task(%2d)(%2d)\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBExtPtr->TaskNumber, OSTCBHighRdy->OSTCBId, OSTCBHighRdy->OSTCBExtPtr->TaskNumber);
+                        printf("%2d	 Preemption\t task(%2d)(%2d)\t task(%2d)(%2d)\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBExtPtr->TaskNumber, OSTCBHighRdy->OSTCBId, OSTCBHighRdy->OSTCBExtPtr->TaskNumber);
                         if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
                         {
-                            fprintf(Output_fp, "%2d\tPreemption\t task(%2d)(%2d)\t task(%2d)(%2d)\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBExtPtr->TaskNumber, OSTCBHighRdy->OSTCBId, OSTCBHighRdy->OSTCBExtPtr->TaskNumber);
+                            fprintf(Output_fp, "%2d	 Preemption\t task(%2d)(%2d)\t task(%2d)(%2d)\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBExtPtr->TaskNumber, OSTCBHighRdy->OSTCBId, OSTCBHighRdy->OSTCBExtPtr->TaskNumber);
                             fclose(Output_fp);
                         }
                         if (OSTCBHighRdy->OSTCBExtPtr->count == 0)
                             OSTCBHighRdy->OSTCBExtPtr->start_time = OSTimeGet();
                     }
                     else {
-                        printf("%2d\tPreemption\t task(%2d)\t task(%2d)\n", OSTimeGet(), OSTCBCur->OSTCBPrio, OSTCBHighRdy->OSTCBId);
+                        printf("%2d	 Preemption\t task(%2d)\t task(%2d)\n", OSTimeGet(), OSTCBCur->OSTCBPrio, OSTCBHighRdy->OSTCBId);
                         if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
                         {
-                            fprintf(Output_fp, "%2d\tPreemption\t task(%2d)\t task(%2d)\n", OSTimeGet(), OSTCBCur->OSTCBPrio, OSTCBHighRdy->OSTCBId);
+                            fprintf(Output_fp, "%2d	 Preemption\t task(%2d)\t task(%2d)\n", OSTimeGet(), OSTCBCur->OSTCBPrio, OSTCBHighRdy->OSTCBId);
                             fclose(Output_fp);
                         }
                     }

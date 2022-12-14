@@ -114,8 +114,11 @@ int  main (void)
     OS_TCB* ptcb;
 
     INT8U err;
-    R1 = OSMutexCreate(R1_PRIO, &err);
-    R2 = OSMutexCreate(R2_PRIO, &err);
+
+    if (R1_exist == 1)
+        R1 = OSMutexCreate(R1_prio, &err);
+    if (R2_exist == 1)
+        R2 = OSMutexCreate(R2_prio, &err);
     
     /*Create Task Set*/
     for (n = 0; n < TASK_NUMBER; n++){
@@ -148,75 +151,75 @@ void task(void* pdata) {
 
     while (1) 
     {
-        
         if (task_data->R1LockTime != 0 && task_data->R2LockTime != 0) {
-            /*if (task_data->R1LockTime < task_data->R2LockTime && task_data->R1UnlockTime < task_data->R2UnlockTime) {
-                
-            }*/
-            if (task_data->R1LockTime < task_data->R2LockTime && task_data->R1UnlockTime > task_data->R2UnlockTime) {
-                   
+            if (task_data->R1LockTime < task_data->R2LockTime && task_data->R1UnlockTime < task_data->R2UnlockTime) {
                 Preeptwait(task_data->R1LockTime);
                 OSMutexPend(R1, 0, &err);
-                
+                Preeptwait(task_data->R1UnlockTime - task_data->R1LockTime);
+                OSMutexPost(R1);
+                OS_Sched();
+                Preeptwait(task_data->R2LockTime - task_data->R1UnlockTime);
+                OSMutexPend(R2, 0, &err);
+                Preeptwait(task_data->R2UnlockTime - task_data->R2LockTime);
+                OSMutexPost(R2);
+                OS_Sched();
+                mywait(task_data->TaskExecutionTime - task_data->R2UnlockTime);
+            }
+            else if (task_data->R1LockTime < task_data->R2LockTime && task_data->R1UnlockTime > task_data->R2UnlockTime) {
+                Preeptwait(task_data->R1LockTime);
+                OSMutexPend(R1, 0, &err);
                 Preeptwait(task_data->R2LockTime - task_data->R1LockTime);
                 OSMutexPend(R2, 0, &err);
-                
                 Preeptwait(task_data->R2UnlockTime - task_data->R2LockTime);
-                
                 OSMutexPost(R2);
                 OS_Sched();
                 Preeptwait(task_data->R1UnlockTime - task_data->R2UnlockTime);
-
                 OSMutexPost(R1);
                 OS_Sched();
                 mywait(task_data->TaskExecutionTime - task_data->R1UnlockTime);
             }
-            /*else if (task_data->R1LockTime > task_data->R2LockTime && task_data->R1UnlockTime > task_data->R2UnlockTime) {
-                
-            }*/
-            else if (task_data->R1LockTime > task_data->R2LockTime && task_data->R1UnlockTime < task_data->R2UnlockTime) {
-
+            else if (task_data->R1LockTime > task_data->R2LockTime && task_data->R1UnlockTime > task_data->R2UnlockTime) {
                 Preeptwait(task_data->R2LockTime);
                 OSMutexPend(R2, 0, &err);
-                
+                Preeptwait(task_data->R2UnlockTime - task_data->R2LockTime);
+                OSMutexPost(R2);
+                OS_Sched();
+                Preeptwait(task_data->R1LockTime - task_data->R2UnlockTime);
+                OSMutexPend(R1, 0, &err);
+                Preeptwait(task_data->R1UnlockTime - task_data->R1LockTime);
+                OSMutexPost(R1);
+                OS_Sched();
+                mywait(task_data->TaskExecutionTime - task_data->R1UnlockTime);
+            }
+            else if (task_data->R1LockTime > task_data->R2LockTime && task_data->R1UnlockTime < task_data->R2UnlockTime) {
+                Preeptwait(task_data->R2LockTime);
+                OSMutexPend(R2, 0, &err);
                 Preeptwait(task_data->R1LockTime - task_data->R2LockTime);
                 OSMutexPend(R1, 0, &err);
-                
                 Preeptwait(task_data->R1UnlockTime - task_data->R1LockTime);
-                
                 OSMutexPost(R1);
                 OS_Sched();
                 Preeptwait(task_data->R2UnlockTime - task_data->R1UnlockTime);
-
                 OSMutexPost(R2);
-
                 OS_Sched();
-                //OSMutexPost(R1);
-
                 mywait(task_data->TaskExecutionTime - task_data->R2UnlockTime);
             }
         }
         else if (task_data->R1LockTime != 0) {
-            Preeptwait(task_data->R1LockTime);
-
+            mywait(task_data->R1LockTime);
             OSMutexPend(R1, 0, &err);
-            
             Preeptwait(task_data->R1UnlockTime - task_data->R1LockTime);
-
             OSMutexPost(R1);
             OS_Sched();
-            Preeptwait(task_data->TaskExecutionTime - task_data->R1UnlockTime);
+            mywait(task_data->TaskExecutionTime - task_data->R1UnlockTime);
         }
         else if (task_data->R2LockTime != 0) {
-            Preeptwait(task_data->R2LockTime);
-
+            mywait(task_data->R2LockTime);
             OSMutexPend(R2, 0, &err);
-            
             Preeptwait(task_data->R2UnlockTime - task_data->R2LockTime);
-
             OSMutexPost(R2);
             OS_Sched();
-            Preeptwait(task_data->TaskExecutionTime - task_data->R2UnlockTime);
+            mywait(task_data->TaskExecutionTime - task_data->R2UnlockTime);
         }
         
     }

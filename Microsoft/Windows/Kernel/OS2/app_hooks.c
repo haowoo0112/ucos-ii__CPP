@@ -151,14 +151,14 @@ void InputFile() {
         }
 
         /*Initial Priority*/
-        //TaskParameter[j].TaskPriority = j; //just an example
+        TaskParameter[j].TaskPriority = 4 * j + 4; //just an example
 
         j++;
     }
-    TaskParameter[0].TaskPriority = TASK1_PRIORITY;
-    TaskParameter[1].TaskPriority = TASK2_PRIORITY;
+    //TaskParameter[0].TaskPriority = TASK1_PRIORITY;
+    //TaskParameter[1].TaskPriority = TASK2_PRIORITY;
     //TaskParameter[2].TaskPriority = TASK3_PRIORITY;
-    /*
+    
     int count = 0, min = 99, min_index;
     int* period;
     period = malloc(TASK_NUMBER * sizeof(int));
@@ -174,10 +174,38 @@ void InputFile() {
                 min_index = i;
             }
         }
-        TaskParameter[min_index].TaskPriority = j;
+        TaskParameter[min_index].TaskPriority = 4 * j + 4;
         period[min_index] = 99;
     }
-    */
+
+    R1_exist = 0;
+    R2_exist = 0;
+    R1_prio = 99;
+    R2_prio = 99;
+
+    for (i = 0; i < TASK_NUMBER; i++) {
+        if (TaskParameter[i].R1UnlockTime != 0) {
+            R1_exist = 1;
+            if (TaskParameter[i].TaskPriority < R1_prio) {
+                R1_prio = TaskParameter[i].TaskPriority - 1;
+            }
+        }
+        if (TaskParameter[i].R2UnlockTime != 0) {
+            R2_exist = 1;
+            if (TaskParameter[i].TaskPriority < R2_prio) {
+                R2_prio = TaskParameter[i].TaskPriority - 1;
+            }
+        }
+    }
+    if (R1_prio == R2_prio) {
+        R1_prio = R1_prio - 2;
+    }
+
+    for (i = 0; i < TASK_NUMBER; i++) {
+        printf("%d %d\n", TaskParameter[i].TaskID, TaskParameter[i].TaskPriority);
+    }
+    printf("%d %d\n", R1_prio, R2_prio);
+
     fclose(fp);
     /*read file*/
 }
