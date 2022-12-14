@@ -682,6 +682,12 @@ INT8U  OSMutexPost (OS_EVENT *pevent)
     if (pevent->OSEventGrp != 0u) {                   /* Any task waiting for the mutex?               */
                                                       /* Yes, Make HPT waiting for mutex ready         */
         prio                = OS_EventTaskRdy(pevent, (void *)0, OS_STAT_MUTEX, OS_STAT_PEND_OK);
+        printf("%2d\tPreemption\t task(%2d)(%2d)\t task(%2d)(%2d)\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBExtPtr->TaskNumber, OSTCBPrioTbl[prio]->OSTCBId, OSTCBHighRdy->OSTCBExtPtr->TaskNumber);
+        if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
+        {
+            fprintf(Output_fp, "%2d\tPreemption\t task(%2d)(%2d)\t task(%2d)(%2d)\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBExtPtr->TaskNumber, OSTCBPrioTbl[prio]->OSTCBId, OSTCBHighRdy->OSTCBExtPtr->TaskNumber);
+            fclose(Output_fp);
+        }
         pevent->OSEventCnt &= OS_MUTEX_KEEP_UPPER_8;  /*      Save priority of mutex's new owner       */
         pevent->OSEventCnt |= prio;
         pevent->OSEventPtr  = OSTCBPrioTbl[prio];     /*      Link to new mutex owner's OS_TCB         */

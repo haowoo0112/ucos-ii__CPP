@@ -75,13 +75,21 @@ FILE* fp;
 #define INFO 8  //information of task
 /*Input File*/
 
+//set2
 
-#define R1_PRIO 0
-#define R2_PRIO 1
-#define TASK1_PRIORITY 2
-#define TASK2_PRIORITY 3
-//#define TASK3_PRIORITY 0
+#define R1_PRIO 1
+#define R2_PRIO 3
+#define TASK1_PRIORITY 4
+#define TASK2_PRIORITY 8
 
+//set1
+/*
+#define R1_PRIO 11
+#define R2_PRIO 7
+#define TASK1_PRIORITY 12
+#define TASK2_PRIORITY 8
+#define TASK3_PRIORITY 0
+*/
 /*Output File*/
 FILE* Output_fp;
 errno_t Output_err;

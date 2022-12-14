@@ -715,18 +715,18 @@ void  OSIntExit (void)
                     OSTCBHighRdy->OSTCBCtxSwCtr++;         /* Inc. # of context switches to this task  */
                     OSTCBCur->OSTCBCtxSwCtr++;
                     //printf("%d\n", OSTCBCur->OSTCBDly);
-                    if (OSTCBCur->OSTCBDly == 0)
+                    if (OSTCBCur->OSTCBDly == 0) {
                         if (OSTCBCur->OSTCBPrio != OS_TASK_IDLE_PRIO) {
-                            printf("%2d\tPreemption\t task(%2d)(%2d)\t task(%2d)(%2d)\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBExtPtr->TaskNumber, OSTCBHighRdy->OSTCBId, OSTCBHighRdy->OSTCBExtPtr->TaskNumber);
+                            /*printf("%2d\tPreemption\t task(%2d)(%2d)\t task(%2d)(%2d)\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBExtPtr->TaskNumber, OSTCBHighRdy->OSTCBId, OSTCBHighRdy->OSTCBExtPtr->TaskNumber);
                             if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
                             {
                                 fprintf(Output_fp, "%2d\tPreemption\t task(%2d)(%2d)\t task(%2d)(%2d)\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBExtPtr->TaskNumber, OSTCBHighRdy->OSTCBId, OSTCBHighRdy->OSTCBExtPtr->TaskNumber);
                                 fclose(Output_fp);
-                            }
+                            }*/
                             if (OSTCBHighRdy->OSTCBExtPtr->count == 0)
                                 OSTCBHighRdy->OSTCBExtPtr->start_time = OSTimeGet();
                         }
-                        else {
+                        if (OSTCBCur->OSTCBPrio == OS_TASK_IDLE_PRIO) {
                             printf("%2d\tPreemption\t task(%2d)\t task(%2d)(%2d)\n", OSTimeGet(), OSTCBCur->OSTCBPrio, OSTCBHighRdy->OSTCBId, OSTCBHighRdy->OSTCBExtPtr->TaskNumber);
                             if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
                             {
@@ -734,6 +734,7 @@ void  OSIntExit (void)
                                 fclose(Output_fp);
                             }
                         }
+                    }
                     else {
                         if (OSTCBHighRdy->OSTCBPrio != OS_TASK_IDLE_PRIO) {
                             printf("%2d\tCompletion\t task(%2d)(%2d)\t task(%2d)(%2d)\n",
@@ -1851,8 +1852,8 @@ void  OS_Sched (void)
 #if OS_TASK_PROFILE_EN > 0u
                 OSTCBHighRdy->OSTCBCtxSwCtr++;         /* Inc. # of context switches to this task      */
 #endif
-                printf("%d\n", OSPrioHighRdy);
-                /*
+                //printf("%d\n", OSPrioHighRdy);
+                
                 if ((INT8U)(R1->OSEventCnt & 0x00FFu) == 0xff && (INT8U)(R2->OSEventCnt & 0x00FFu) == 0xff) {
                     if (OSTCBHighRdy->OSTCBPrio != OS_TASK_IDLE_PRIO) {
                         printf("%2d\tPreemption\t task(%2d)(%2d)\t task(%2d)(%2d)\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBExtPtr->TaskNumber, OSTCBHighRdy->OSTCBId, OSTCBHighRdy->OSTCBExtPtr->TaskNumber);
@@ -1872,7 +1873,7 @@ void  OS_Sched (void)
                             fclose(Output_fp);
                         }
                     }
-                }*/
+                }
                 OSCtxSwCtr++;                          /* Increment context switch counter             */
                 
 #if OS_TASK_CREATE_EXT_EN > 0u
