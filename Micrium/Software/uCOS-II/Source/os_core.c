@@ -1854,7 +1854,7 @@ void  OS_Sched (void)
 #endif
                 //printf("%d\n", OSPrioHighRdy);
                 
-                if ((INT8U)(R1->OSEventCnt & 0x00FFu) == 0xff && (INT8U)(R2->OSEventCnt & 0x00FFu) == 0xff) {
+                if (OSTCBHighRdy->OSTCBId != OSTCBCur->OSTCBId) {
                     if (OSTCBHighRdy->OSTCBPrio != OS_TASK_IDLE_PRIO) {
                         printf("%2d\tPreemption\t task(%2d)(%2d)\t task(%2d)(%2d)\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBExtPtr->TaskNumber, OSTCBHighRdy->OSTCBId, OSTCBHighRdy->OSTCBExtPtr->TaskNumber);
                         if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)

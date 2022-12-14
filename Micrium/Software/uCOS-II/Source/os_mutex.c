@@ -479,7 +479,7 @@ void  OSMutexPend (OS_EVENT  *pevent,
 #if OS_CRITICAL_METHOD == 3u                               /* Allocate storage for CPU status register */
     OS_CPU_SR  cpu_sr = 0u;
 #endif
-
+    INT8U CPP_flag = 0;
 
 #ifdef OS_SAFETY_CRITICAL
     if (perr == (INT8U *)0) {
@@ -529,13 +529,55 @@ void  OSMutexPend (OS_EVENT  *pevent,
             *perr = OS_ERR_NONE;
         }
         OS_TRACE_MUTEX_PEND_EXIT(*perr);
-        return;
+        CPP_flag = 1;
+        //return;
     }
+
+
+    if (pcp == R2_PRIO) {
+        if (OSTCBCur->OSTCBPrio < pcp) {
+            printf("%2d\tTask %d get R2\t\t\t\t\t%d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, OSTCBCur->OSTCBPrio);
+            if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
+            {
+                fprintf(Output_fp, "%2d\tTask %d get R2\t\t\t\t\t%d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, OSTCBCur->OSTCBPrio);
+                fclose(Output_fp);
+            }
+        }
+        else {
+            printf("%2d\tTask %d get R2\t\t\t\t\t%d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, pcp);
+            if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
+            {
+                fprintf(Output_fp, "%2d\tTask %d get R2\t\t\t\t\t%d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, pcp);
+                fclose(Output_fp);
+            }
+        }
+    }
+    if (pcp == R1_PRIO) {
+        if (OSTCBCur->OSTCBPrio < pcp) {
+            printf("%2d\tTask %d get R1\t\t\t\t\t%d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, OSTCBCur->OSTCBPrio);
+            if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
+            {
+                fprintf(Output_fp, "%2d\tTask %d get R1\t\t\t\t\t%d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, OSTCBCur->OSTCBPrio);
+                fclose(Output_fp);
+            }
+        }
+        else {
+            printf("%2d\tTask %d get R1\t\t\t\t\t%d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, pcp);
+            if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
+            {
+                fprintf(Output_fp, "%2d\tTask %d get R1\t\t\t\t\t%d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, pcp);
+                fclose(Output_fp);
+            }
+        }
+    }
+
     if (pcp != OS_PRIO_MUTEX_CEIL_DIS) {
         mprio = (INT8U)(pevent->OSEventCnt & OS_MUTEX_KEEP_LOWER_8); /*  Get priority of mutex owner   */
         ptcb  = (OS_TCB *)(pevent->OSEventPtr);                   /*     Point to TCB of mutex owner   */
         if (ptcb->OSTCBPrio > pcp) {                              /*     Need to promote prio of owner?*/
-            if (mprio > OSTCBCur->OSTCBPrio) {
+            if (mprio > OSTCBCur->OSTCBPrio || CPP_flag == 1) {
+                CPP_flag = 0;
+                
                 y = ptcb->OSTCBY;
                 if ((OSRdyTbl[y] & ptcb->OSTCBBitX) != 0u) {      /*     See if mutex owner is ready   */
                     OSRdyTbl[y] &= (OS_PRIO)~ptcb->OSTCBBitX;     /*     Yes, Remove owner from Rdy ...*/
@@ -585,7 +627,7 @@ void  OSMutexPend (OS_EVENT  *pevent,
     OSTCBCur->OSTCBStat     |= OS_STAT_MUTEX;         /* Mutex not available, pend current task        */
     OSTCBCur->OSTCBStatPend  = OS_STAT_PEND_OK;
     OSTCBCur->OSTCBDly       = timeout;               /* Store timeout in current task's TCB           */
-    OS_EventTaskWait(pevent);                         /* Suspend task until event or timeout occurs    */
+    //OS_EventTaskWait(pevent);                         /* Suspend task until event or timeout occurs    */
     OS_EXIT_CRITICAL();
     OS_Sched();                                       /* Find next highest priority task ready         */
     OS_ENTER_CRITICAL();
@@ -679,15 +721,47 @@ INT8U  OSMutexPost (OS_EVENT *pevent)
         }
         OSTCBPrioTbl[pcp] = OS_TCB_RESERVED;          /* Reserve table entry                           */
     }
+
+    if (pcp == R2_PRIO) {
+        if (pcp > OSTCBCur->OSTCBPrio) {
+            printf("%2d\tTask %d release R2\t\t\t\t%d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, OSTCBCur->OSTCBPrio);
+            if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
+            {
+                fprintf(Output_fp, "%2d\tTask %d release R2\t\t\t\t%d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, OSTCBCur->OSTCBPrio);
+                fclose(Output_fp);
+            }
+        }
+        else {
+            printf("%2d\tTask %d release R2\t\t\t\t%d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, pcp, OSTCBCur->OSTCBPrio);
+            if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
+            {
+                fprintf(Output_fp, "%2d\tTask %d release R2\t\t\t\t%d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, pcp, OSTCBCur->OSTCBPrio);
+                fclose(Output_fp);
+            }
+        }
+    }
+    if (pcp == R1_PRIO) {
+        if (pcp > OSTCBCur->OSTCBPrio) {
+            printf("%2d\tTask %d release R1\t\t\t\t%d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, OSTCBCur->OSTCBPrio);
+            if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
+            {
+                fprintf(Output_fp, "%2d\tTask %d release R1\t\t\t\t%d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBPrio, OSTCBCur->OSTCBPrio);
+                fclose(Output_fp);
+            }
+        }
+        else {
+            printf("%2d\tTask %d release R1\t\t\t\t%d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, pcp, OSTCBCur->OSTCBPrio);
+            if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
+            {
+                fprintf(Output_fp, "%2d\tTask %d release R1\t\t\t\t%d to %d\n", OSTimeGet(), OSTCBCur->OSTCBId, pcp, OSTCBCur->OSTCBPrio);
+                fclose(Output_fp);
+            }
+        }
+    }
+
     if (pevent->OSEventGrp != 0u) {                   /* Any task waiting for the mutex?               */
                                                       /* Yes, Make HPT waiting for mutex ready         */
         prio                = OS_EventTaskRdy(pevent, (void *)0, OS_STAT_MUTEX, OS_STAT_PEND_OK);
-        printf("%2d\tPreemption\t task(%2d)(%2d)\t task(%2d)(%2d)\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBExtPtr->TaskNumber, OSTCBPrioTbl[prio]->OSTCBId, OSTCBHighRdy->OSTCBExtPtr->TaskNumber);
-        if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
-        {
-            fprintf(Output_fp, "%2d\tPreemption\t task(%2d)(%2d)\t task(%2d)(%2d)\n", OSTimeGet(), OSTCBCur->OSTCBId, OSTCBCur->OSTCBExtPtr->TaskNumber, OSTCBPrioTbl[prio]->OSTCBId, OSTCBHighRdy->OSTCBExtPtr->TaskNumber);
-            fclose(Output_fp);
-        }
         pevent->OSEventCnt &= OS_MUTEX_KEEP_UPPER_8;  /*      Save priority of mutex's new owner       */
         pevent->OSEventCnt |= prio;
         pevent->OSEventPtr  = OSTCBPrioTbl[prio];     /*      Link to new mutex owner's OS_TCB         */

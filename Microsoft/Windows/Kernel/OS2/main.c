@@ -151,221 +151,72 @@ void task(void* pdata) {
         
         if (task_data->R1LockTime != 0 && task_data->R2LockTime != 0) {
             /*if (task_data->R1LockTime < task_data->R2LockTime && task_data->R1UnlockTime < task_data->R2UnlockTime) {
-                OSMutexPend(R2, 0, &err);
-                OSMutexPend(R1, 0, &err);
-                mywait(task_data->R1LockTime);
                 
-                printf("%2d\tTask %d get R1\n", OSTimeGet(), task_data->TaskID);
-                if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
-                {
-                    fprintf(Output_fp, "%2d\tTask %d get R1\n", OSTimeGet(), task_data->TaskID);
-                    fclose(Output_fp);
-                }
-                mywait(task_data->R1UnlockTime - task_data->R1LockTime);
-                printf("%2d\tTask %d release R1\n", OSTimeGet(), task_data->TaskID);
-                if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
-                {
-                    fprintf(Output_fp, "%2d\tTask %d release R1\n", OSTimeGet(), task_data->TaskID);
-                    fclose(Output_fp);
-                }
-                
-
-                mywait(task_data->R2LockTime - task_data->R1UnlockTime);
-
-                
-                printf("%2d\tTask %d get R2\n", OSTimeGet(), task_data->TaskID);
-                if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
-                {
-                    fprintf(Output_fp, "%2d\tTask %d get R2\n", OSTimeGet(), task_data->TaskID);
-                    fclose(Output_fp);
-                }
-                mywait(task_data->R2UnlockTime - task_data->R2LockTime);
-                printf("%2d\tTask %d release R2\n", OSTimeGet(), task_data->TaskID);
-                if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
-                {
-                    fprintf(Output_fp, "%2d\tTask %d release R2\n", OSTimeGet(), task_data->TaskID);
-                    fclose(Output_fp);
-                }
-                OSMutexPost(R2);
-                OSMutexPost(R1);
-
-                mywait(task_data->TaskExecutionTime - task_data->R2UnlockTime);
             }*/
             if (task_data->R1LockTime < task_data->R2LockTime && task_data->R1UnlockTime > task_data->R2UnlockTime) {
-                if(R2_PRIO < R1_PRIO)
-                    OSMutexPend(R2, 0, &err);
-                else
-                    OSMutexPend(R1, 0, &err);
-                //OSMutexPend(R1, 0, &err);
-                mywait(task_data->R1LockTime);
+                   
+                Preeptwait(task_data->R1LockTime);
+                OSMutexPend(R1, 0, &err);
                 
-                printf("%2d\tTask %d get R1\n", OSTimeGet(), task_data->TaskID);
-                if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
-                {
-                    fprintf(Output_fp, "%2d\tTask %d get R1\n", OSTimeGet(), task_data->TaskID);
-                    fclose(Output_fp);
-                }
-                mywait(task_data->R2LockTime - task_data->R1LockTime);
+                Preeptwait(task_data->R2LockTime - task_data->R1LockTime);
+                OSMutexPend(R2, 0, &err);
                 
-                printf("%2d\tTask %d get R2\n", OSTimeGet(), task_data->TaskID);
-                if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
-                {
-                    fprintf(Output_fp, "%2d\tTask %d get R2\n", OSTimeGet(), task_data->TaskID);
-                    fclose(Output_fp);
-                }
-                mywait(task_data->R2UnlockTime - task_data->R2LockTime);
+                Preeptwait(task_data->R2UnlockTime - task_data->R2LockTime);
                 
-                printf("%2d\tTask %d release R2\n", OSTimeGet(), task_data->TaskID);
-                if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
-                {
-                    fprintf(Output_fp, "%2d\tTask %d release R2\n", OSTimeGet(), task_data->TaskID);
-                    fclose(Output_fp);
-                }
-                
-                mywait(task_data->R1UnlockTime - task_data->R2UnlockTime);
-                printf("%2d\tTask %d release R1\n", OSTimeGet(), task_data->TaskID);
-                if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
-                {
-                    fprintf(Output_fp, "%2d\tTask %d release R1\n", OSTimeGet(), task_data->TaskID);
-                    fclose(Output_fp);
-                }
-                
-                if (R2_PRIO < R1_PRIO)
-                    OSMutexPost(R2);
-                else
-                    OSMutexPost(R1);
-                //OSMutexPost(R1);
+                OSMutexPost(R2);
+                OS_Sched();
+                Preeptwait(task_data->R1UnlockTime - task_data->R2UnlockTime);
 
+                OSMutexPost(R1);
+                OS_Sched();
                 mywait(task_data->TaskExecutionTime - task_data->R1UnlockTime);
             }
             /*else if (task_data->R1LockTime > task_data->R2LockTime && task_data->R1UnlockTime > task_data->R2UnlockTime) {
-                mywait(task_data->R2LockTime);
-
-                OSMutexPend(R2, 0, &err);
-                printf("%2d\tTask %d get R2\n", OSTimeGet(), task_data->TaskID);
-                if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
-                {
-                    fprintf(Output_fp, "%2d\tTask %d get R2\n", OSTimeGet(), task_data->TaskID);
-                    fclose(Output_fp);
-                }
-                mywait(task_data->R2UnlockTime - task_data->R2LockTime);
-                printf("%2d\tTask %d release R2\n", OSTimeGet(), task_data->TaskID);
-                if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
-                {
-                    fprintf(Output_fp, "%2d\tTask %d release R2\n", OSTimeGet(), task_data->TaskID);
-                    fclose(Output_fp);
-                }
-                OSMutexPost(R2);
-
-                mywait(task_data->R1LockTime - task_data->R2UnlockTime);
-
-                OSMutexPend(R1, 0, &err);
-                printf("%2d\tTask %d get R1\n", OSTimeGet(), task_data->TaskID);
-                if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
-                {
-                    fprintf(Output_fp, "%2d\tTask %d get R1\n", OSTimeGet(), task_data->TaskID);
-                    fclose(Output_fp);
-                }
-                mywait(task_data->R1UnlockTime - task_data->R1LockTime);
-                printf("%2d\tTask %d release R1\n", OSTimeGet(), task_data->TaskID);
-                if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
-                {
-                    fprintf(Output_fp, "%2d\tTask %d release R1\n", OSTimeGet(), task_data->TaskID);
-                    fclose(Output_fp);
-                }
-                OSMutexPost(R1);
-
-                mywait(task_data->TaskExecutionTime - task_data->R1UnlockTime);
+                
             }*/
             else if (task_data->R1LockTime > task_data->R2LockTime && task_data->R1UnlockTime < task_data->R2UnlockTime) {
-                if (R2_PRIO < R1_PRIO)
-                    OSMutexPend(R2, 0, &err);
-                else
-                    OSMutexPend(R1, 0, &err);
-                //OSMutexPend(R1, 0, &err);
-                mywait(task_data->R2LockTime);
 
-                printf("%2d\tTask %d get R2\n", OSTimeGet(), task_data->TaskID);
-                if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
-                {
-                    fprintf(Output_fp, "%2d\tTask %d get R2\n", OSTimeGet(), task_data->TaskID);
-                    fclose(Output_fp);
-                }
-                mywait(task_data->R1LockTime - task_data->R2LockTime);
+                Preeptwait(task_data->R2LockTime);
+                OSMutexPend(R2, 0, &err);
                 
-                printf("%2d\tTask %d get R1\n", OSTimeGet(), task_data->TaskID);
-                if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
-                {
-                    fprintf(Output_fp, "%2d\tTask %d get R1\n", OSTimeGet(), task_data->TaskID);
-                    fclose(Output_fp);
-                }
-                mywait(task_data->R1UnlockTime - task_data->R1LockTime);
-                printf("%2d\tTask %d release R1\n", OSTimeGet(), task_data->TaskID);
-                if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
-                {
-                    fprintf(Output_fp, "%2d\tTask %d release R1\n", OSTimeGet(), task_data->TaskID);
-                    fclose(Output_fp);
-                }
+                Preeptwait(task_data->R1LockTime - task_data->R2LockTime);
+                OSMutexPend(R1, 0, &err);
                 
-                mywait(task_data->R2UnlockTime - task_data->R1UnlockTime);
-                printf("%2d\tTask %d release R2\n", OSTimeGet(), task_data->TaskID);
-                if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
-                {
-                    fprintf(Output_fp, "%2d\tTask %d release R2\n", OSTimeGet(), task_data->TaskID);
-                    fclose(Output_fp);
-                }
-                if (R2_PRIO < R1_PRIO)
-                    OSMutexPost(R2);
-                else
-                    OSMutexPost(R1);
+                Preeptwait(task_data->R1UnlockTime - task_data->R1LockTime);
+                
+                OSMutexPost(R1);
+                OS_Sched();
+                Preeptwait(task_data->R2UnlockTime - task_data->R1UnlockTime);
+
+                OSMutexPost(R2);
+
+                OS_Sched();
                 //OSMutexPost(R1);
 
                 mywait(task_data->TaskExecutionTime - task_data->R2UnlockTime);
             }
         }
         else if (task_data->R1LockTime != 0) {
-            mywait(task_data->R1LockTime);
+            Preeptwait(task_data->R1LockTime);
 
             OSMutexPend(R1, 0, &err);
-            printf("%2d\tTask %d get R1\t\t\t\t\t%d to %d\n", OSTimeGet(), task_data->TaskID, OSTCBCur->OSTCBPrio, R1_PRIO);
-            if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
-            {
-                fprintf(Output_fp, "%2d\tTask %d get R1\t\t\t\t\t%d to %d\n", OSTimeGet(), task_data->TaskID, OSTCBCur->OSTCBPrio, R1_PRIO);
-                fclose(Output_fp);
-            }
             
             Preeptwait(task_data->R1UnlockTime - task_data->R1LockTime);
- 
-            printf("%2d\tTask %d release R1\t\t\t\t%d to %d\n", OSTimeGet(), task_data->TaskID, R1_PRIO, OSTCBCur->OSTCBPrio);
-            if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
-            {
-                fprintf(Output_fp, "%2d\tTask %d release R1\t\t\t\t%d to %d\n", OSTimeGet(), task_data->TaskID, R1_PRIO, OSTCBCur->OSTCBPrio);
-                fclose(Output_fp);
-            }
-            OSMutexPost(R1);
 
-            mywait(task_data->TaskExecutionTime - task_data->R1UnlockTime);
+            OSMutexPost(R1);
+            OS_Sched();
+            Preeptwait(task_data->TaskExecutionTime - task_data->R1UnlockTime);
         }
         else if (task_data->R2LockTime != 0) {
-            mywait(task_data->R2LockTime);
+            Preeptwait(task_data->R2LockTime);
 
             OSMutexPend(R2, 0, &err);
-            printf("%2d\tTask %d get R2\t\t\t\t\t%d to %d\n", OSTimeGet(), task_data->TaskID, OSTCBCur->OSTCBPrio, R2_PRIO);
-            if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
-            {
-                fprintf(Output_fp, "%2d\tTask %d get R2\t\t\t\t\t%d to %d\n", OSTimeGet(), task_data->TaskID, OSTCBCur->OSTCBPrio, R2_PRIO);
-                fclose(Output_fp);
-            }
+            
             Preeptwait(task_data->R2UnlockTime - task_data->R2LockTime);
-            printf("%2d\tTask %d release R2\t\t\t\t%d to %d\n", OSTimeGet(), task_data->TaskID, R2_PRIO, OSTCBCur->OSTCBPrio);
-            if ((Output_err = fopen_s(&Output_fp, "./Output.txt", "a")) == 0)
-            {
-                fprintf(Output_fp, "%2d\tTask %d release R2\t\t\t\t%d to %d\n", OSTimeGet(), task_data->TaskID, R2_PRIO, OSTCBCur->OSTCBPrio);
-                fclose(Output_fp);
-            }
-            OSMutexPost(R2);
 
-            mywait(task_data->TaskExecutionTime - task_data->R2UnlockTime);
+            OSMutexPost(R2);
+            OS_Sched();
+            Preeptwait(task_data->TaskExecutionTime - task_data->R2UnlockTime);
         }
         
     }
